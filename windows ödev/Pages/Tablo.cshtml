@@ -1,0 +1,113 @@
+﻿@page
+@model windows_ödev.Pages.TabloModel
+@{
+}
+@{
+    var prevDisabled = !Model.Persons.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.Persons.HasNextPage ? "disabled" : "";
+}
+
+@if(Model.Persons != null && Model.Persons.Any())
+{
+    <form asp-page="./Tablo" method="get">
+        <div class="form-actions no-color">
+            <p>
+                <input type="text" name="SearchString" value="@Model.CurrentFilter" />
+                <input type="submit" value="Search" class="btn btn-primary" /> |
+                <a asp-page="./Tablo" style="color: black;">Back to full List</a>
+
+            </p>
+        </div>
+    </form>
+    
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Fotoğraf</th>
+
+                <th>
+                    <a asp-page="./Tablo" style="color: black;" asp-route-sortOrder="@Model.NameSort"
+                        asp-route-currentFilter="@Model.CurrentFilter">
+                    @Html.DisplayNameFor(model => model.Persons[0].Name) 
+                       
+                </a>
+                </th>
+                <th>
+                    <a asp-page="./Tablo" style="color: black;" asp-route-sortOrder="@Model.SurnameSort"
+                        asp-route-currentFilter="@Model.CurrentFilter">
+                        @Html.DisplayNameFor(model => model.Persons[0].Surname)
+                    </a>
+                </th>
+                <th>
+                    <a asp-page="./Tablo" style="color: black;" asp-route-sortOrder="@Model.DateSort"
+                        asp-route-currentFilter="@Model.CurrentFilter">
+                        @Html.DisplayNameFor(model => model.Persons[0].BirthDate)
+                    </a>
+                </th>
+                <th>
+                    <a asp-page="./Tablo" style="color: black;" asp-route-sortOrder="@Model.AgeSort"
+                        asp-route-currentFilter="@Model.CurrentFilter">
+                        @Html.DisplayNameFor(model => model.Persons[0].Age)
+                    </a>
+                </th>
+
+                <th>
+                    <a asp-page="./Tablo" style="color: black;" asp-route-sortOrder="@Model.GenderSort"
+                       asp-route-currentFilter="@Model.CurrentFilter">
+                        @Html.DisplayNameFor(model => model.Persons[0].Gender)
+                    </a>
+                </th>
+
+                <th></th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var person in Model.Persons)
+            {
+                <tr>
+                    @if (person.PhotoData != null)
+                    {
+                        <td><img src="data:image;base64,@person.PhotoData" alt="Avatar" width="80" height="80" style="border-radius: 50%" /></td>
+                    }
+                    else
+                    {
+                        <td><img src="/img/indir.png" alt="Avatar" width="80" height="80" style="border-radius: 50%" ; /></td>
+                    }
+
+                <td style="padding-top: 30px;">@person.Name</td>
+                <td style="padding-top: 30px;">@person.Surname</td>
+                <td style="padding-top: 30px;">@person.BirthDate.ToShortDateString()</td>
+                <td style="padding-top: 30px;">@person.Age</td>
+                <td style="padding-top: 30px;">@person.Gender</td>
+                <td>
+                        <a href="/Tablo/Edit/@person.Id" class="btn btn-dark" style="margin-top: 20px;">Edit</a>
+                </td>
+
+                </tr>
+            }
+        </tbody>
+    </table>
+
+
+
+    <a asp-page="./Tablo"
+        asp-route-sortOrder="@Model.CurrentSort"
+       asp-route-pageIndex="@(Model.Persons.PageIndex - 1)"
+        asp-route-currentFilter="@Model.CurrentFilter"
+        class="btn btn-primary @prevDisabled">
+        Previous
+    </a>
+    <a asp-page="./Tablo"
+        asp-route-sortOrder="@Model.CurrentSort"
+       asp-route-pageIndex="@(Model.Persons.PageIndex + 1)"
+        asp-route-currentFilter="@Model.CurrentFilter"
+        class="btn btn-primary @nextDisabled">
+        Next
+    </a>
+}
+
+
+
+
+ 

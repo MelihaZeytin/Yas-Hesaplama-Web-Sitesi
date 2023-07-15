@@ -1,0 +1,86 @@
+﻿@page
+@model windows_ödev.Pages.ChartsModel
+@{
+    ViewData["Title"] = "Cinsiyet ve Yaş Dağılımı";
+}
+
+<h2>Cinsiyet ve Yaş Dağılımı</h2><br /><br />
+<div style="display: flex;">
+    <div style="flex: 1;">
+        <canvas id="genderChart" width="400" height="400"></canvas>
+    </div>
+    <div style="flex: 1; margin-right: 100px;">
+        <canvas id="ageChart" width="400" height="400"></canvas>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        var genderDistribution = @Html.Raw(Model.GenderDistributionJson);
+        var ageAverages = @Html.Raw(Model.AgeAveragesJson);
+
+        var genderCtx = document.getElementById('genderChart').getContext('2d');
+        var genderChart = new Chart(genderCtx, {
+            type: 'pie',
+            data: {
+                labels: Object.keys(genderDistribution),
+                datasets: [{
+                    data: Object.values(genderDistribution),
+                    backgroundColor: [
+                        'rgba(54, 162, 235, 0.5)',
+                        'rgba(255, 99, 132, 0.5)'
+                    ],
+                    borderColor: [
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 99, 132, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true
+            }
+        });
+
+        var ageCtx = document.getElementById('ageChart').getContext('2d');
+        var ageChart = new Chart(ageCtx, {
+            type: 'bar',
+            data: {
+                labels: Object.keys(ageAverages),
+                datasets: [{
+                    label: 'Yaş Ortalaması',
+                    data: Object.values(ageAverages),
+                    backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            color: 'rgba(0, 0, 0, 0.1)' // Y ekseni
+                        },
+                        ticks: {
+                            color: 'rgba(0, 0, 0, 0.8)' // Y eksenindeki rakamlar
+                        }
+                    },
+                    x: {
+                        grid: {
+                            color: 'rgba(0, 0, 0, 0.1)'
+                        },
+                        ticks: {
+                            color: 'rgba(0, 0, 0, 0.8)'
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+}
